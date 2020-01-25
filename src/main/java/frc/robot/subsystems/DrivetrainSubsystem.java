@@ -14,7 +14,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants.drivetrain;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.pow;
 
 
 public class DrivetrainSubsystem extends SubsystemBase {

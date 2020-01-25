@@ -31,6 +31,7 @@ public class RobotContainer {
 
   private Joystick left_joy = new Joystick(joystick.LEFT_JOY_ID);
   private Joystick right_joy = new Joystick(joystick.RIGHT_JOY_ID);
+  private Joystick button_monkey = new Joystick(joystick.BUTTON_MONKEY);
 
 
 
