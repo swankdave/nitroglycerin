@@ -51,7 +51,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     shooterSubsystem.test_shooter_bottom(m_robotContainer.right_joy.getY());
-    shooterTiltSubsystem.test_azimuth(m_robotContainer.left_joy.getY());
+    shooterTiltSubsystem.test_tilt(m_robotContainer.left_joy.getY());
     CommandScheduler.getInstance().run();
   }
 

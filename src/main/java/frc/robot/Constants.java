@@ -49,7 +49,7 @@ public final class Constants {
 
         public static final int TOP_MOTOR_ID = 20;
         public static final int BOTTOM_MOTOR_ID = 21;
-        public static final int AZIMUTH_MOTOR_ID = 22;
+        public static final int TILT_MOTOR_ID = 22;
 
     }
 }

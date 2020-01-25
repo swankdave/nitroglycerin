@@ -8,16 +8,16 @@ import frc.robot.Constants;
 
 public class ShooterTiltSubsystem extends SubsystemBase {
 
-    private CANSparkMax azimuth_motor = new CANSparkMax(Constants.shooter.AZIMUTH_MOTOR_ID, CANSparkMax.MotorType.kBrushless);
-    private CANEncoder azimuth_encoder = azimuth_motor.getEncoder();
+    private CANSparkMax tilt_motor = new CANSparkMax(Constants.shooter.TILT_MOTOR_ID, CANSparkMax.MotorType.kBrushless);
+    private CANEncoder tilt_encoder = tilt_motor.getEncoder();
 
     public ShooterTiltSubsystem() {
         //Init code here
     }
 
-    public void test_azimuth(double percent_output) {
-        azimuth_motor.set(percent_output);
-        SmartDashboard.putNumber("Azimuth RPM: ", azimuth_encoder.getVelocity());
-        SmartDashboard.putNumber("Azimuth % Out: ", azimuth_motor.getOutputCurrent());
+    public void test_tilt(double percent_output) {
+        tilt_motor.set(percent_output);
+        SmartDashboard.putNumber("Azimuth RPM: ", tilt_encoder.getVelocity());
+        SmartDashboard.putNumber("Azimuth % Out: ", tilt_motor.getOutputCurrent());
     }
 }
