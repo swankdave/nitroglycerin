@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -21,7 +20,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void test_shooter_bottom(double percent_output) {
-        top_shooter_motor.set(ControlMode.PercentOutput, percent_output);
+        top_shooter_motor.set(TalonFXControlMode.PercentOutput, percent_output);
         bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, percent_output);
         SmartDashboard.putNumber("Top Shooter Velocity: ", top_shooter_motor.getSelectedSensorVelocity());
         SmartDashboard.putNumber("Top Shooter Output Current: (amps)", top_shooter_motor.getStatorCurrent());
