@@ -28,4 +28,27 @@ public final class Constants {
         public static final int LEFT_JOY_ID = 0;
         public static final int RIGHT_JOY_ID = 1;
     }
+
+    public static final class shooter {
+        public static final class pid_constants {
+            public static final class top_motor {
+                public static final double P = 0.0;
+                public static final double I = 0.0;
+                public static final double D = 0.0;
+                public static final double FF = 0.0;
+            }
+            public static final class bottom_motor {
+                public static final double P = 0.0;
+                public static final double I = 0.0;
+                public static final double D = 0.0;
+                public static final double FF = 0.0;
+            }
+
+        }
+
+        public static final int TOP_MOTOR_ID = 20;
+        public static final int BOTTOM_MOTOR_ID = 21;
+        public static final int AZIMUTH_MOTOR_ID = 22;
+
+    }
 }
