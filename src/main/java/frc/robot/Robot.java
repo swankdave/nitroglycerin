@@ -10,6 +10,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.ShooterTiltSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -19,6 +21,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  private ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  private ShooterTiltSubsystem shooterTiltSubsystem = new ShooterTiltSubsystem();
 
   private RobotContainer m_robotContainer;
 
@@ -46,6 +50,8 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    shooterSubsystem.test_shooter_bottom(m_robotContainer.right_joy.getY());
+    shooterTiltSubsystem.test_azimuth(m_robotContainer.left_joy.getY());
     CommandScheduler.getInstance().run();
   }
 
