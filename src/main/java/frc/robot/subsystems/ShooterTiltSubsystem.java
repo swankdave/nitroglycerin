@@ -15,9 +15,26 @@ public class ShooterTiltSubsystem extends SubsystemBase {
         //Init code here
     }
 
-    public void test_tilt(double percent_output) {
-        tilt_motor.set(percent_output);
+    @Override
+    public void periodic() {
         SmartDashboard.putNumber("Azimuth RPM: ", tilt_encoder.getVelocity());
         SmartDashboard.putNumber("Azimuth % Out: ", tilt_motor.getOutputCurrent());
     }
+
+    public void go_up_slow() {
+        tilt_motor.set(-0.25);
+    }
+
+    public void go_down_slow() {
+        tilt_motor.set(0.25);
+    }
+
+    public void hold() {
+        tilt_motor.set(0);
+    }
+
+    public void manual_control(double percent_out) {
+        tilt_motor.set(percent_out);
+    }
+
 }
