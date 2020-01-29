@@ -26,11 +26,14 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DrivetrainSubsystem drivetrain_subsystem = new DrivetrainSubsystem();
+  private ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  private ShooterTiltSubsystem shooterTiltSubsystem = new ShooterTiltSubsystem();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
-  private Joystick left_joy = new Joystick(joystick.LEFT_JOY_ID);
-  private Joystick right_joy = new Joystick(joystick.RIGHT_JOY_ID);
+  public Joystick left_joy = new Joystick(joystick.LEFT_JOY_ID);
+  public Joystick right_joy = new Joystick(joystick.RIGHT_JOY_ID);
+  private Joystick button_monkey = new Joystick(joystick.BUTTON_MONKEY);
 
 
 
