@@ -19,13 +19,17 @@ public class ShooterSubsystem extends SubsystemBase {
         bottom_shooter_motor.setNeutralMode(NeutralMode.Brake);
     }
 
-    public void test_shooter_bottom(double percent_output) {
-        top_shooter_motor.set(TalonFXControlMode.PercentOutput, percent_output);
-        bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, percent_output);
+    public void test_shooter() {
+        double speed = 0.58;
+        top_shooter_motor.set(TalonFXControlMode.PercentOutput, -speed * 0.75);
+        bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 1.0);
+    }
+
+    @Override
+    public void periodic() {
         SmartDashboard.putNumber("Top Shooter Velocity: ", top_shooter_motor.getSelectedSensorVelocity());
         SmartDashboard.putNumber("Top Shooter Output Current: (amps)", top_shooter_motor.getStatorCurrent());
         SmartDashboard.putNumber("Bottom Shooter Output Current: (amps)", bottom_shooter_motor.getStatorCurrent());
         SmartDashboard.putNumber("Bottom Shooter Velocity: ", bottom_shooter_motor.getSelectedSensorVelocity());
     }
-
 }

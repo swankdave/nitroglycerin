@@ -25,7 +25,9 @@ import frc.robot.Constants.drivetrain;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-//  private final DrivetrainSubsystem drivetrain_subsystem = new DrivetrainSubsystem();
+  private final DrivetrainSubsystem drivetrain_subsystem = new DrivetrainSubsystem();
+  private ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  private ShooterTiltSubsystem shooterTiltSubsystem = new ShooterTiltSubsystem();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -43,7 +45,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-//    drivetrain_subsystem.setDefaultCommand(new RunCommand(() -> drivetrain_subsystem.drive(drivetrain_subsystem.deadband_handler(left_joy.getY() * drivetrain.SPEED_MULTIPLIER), drivetrain_subsystem.deadband_handler(right_joy.getY() * drivetrain.SPEED_MULTIPLIER)), drivetrain_subsystem));
+    drivetrain_subsystem.setDefaultCommand(new RunCommand(() -> drivetrain_subsystem.drive(drivetrain_subsystem.deadband_handler(left_joy.getY() * drivetrain.SPEED_MULTIPLIER), drivetrain_subsystem.deadband_handler(right_joy.getY() * drivetrain.SPEED_MULTIPLIER)), drivetrain_subsystem));
   }
 
   /**
