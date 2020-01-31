@@ -52,4 +52,10 @@ public final class Constants {
         public static final int TILT_MOTOR_ID = 22;
 
     }
+
+    public static final class limelight {
+        public static final double DEGREES_FROM_HORIZONTAL = 2.5;
+        public static final double TARGET_HEIGHT_INCHES = 61.0;
+        public static final double LIMELIGHT_HEIGHT_INCHES = 36.0;
+    }
 }
