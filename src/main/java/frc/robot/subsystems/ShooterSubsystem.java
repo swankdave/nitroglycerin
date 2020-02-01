@@ -27,20 +27,47 @@ public class ShooterSubsystem extends SubsystemBase {
         bottom_shooter_motor.config_kP(0, Constants.shooter.pid_constants.bottom_motor.P);
         bottom_shooter_motor.config_kI(0, Constants.shooter.pid_constants.bottom_motor.I);
         bottom_shooter_motor.config_kD(0, Constants.shooter.pid_constants.bottom_motor.D);
+        bottom_shooter_motor.setSelectedSensorPosition(0);
+        top_shooter_motor.setSelectedSensorPosition(0);
+        top_shooter_motor.setInverted(true);
+        top_shooter_motor.configClosedLoopPeakOutput(0, 0.65);
+        bottom_shooter_motor.configClosedLoopPeakOutput(0, 0.70);
+        SmartDashboard.putBoolean("Reset Encoders", false);
+
     }
 
     public void test_shooter() {
-        double speed = 0.58;
-        top_shooter_motor.set(TalonFXControlMode.PercentOutput, -speed * 0.75);
-        bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 1.0);
+//        double speed = 0.58;
+//        top_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 0.75);
+//        bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 1.0);
+//        basic_shooter_shoot();
+    }
+
+    private void basic_shooter_shoot() {
+        top_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(300));
+        bottom_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(350));
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Top Shooter Velocity: ", top_shooter_motor.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("Top Shooter Output Current: (amps)", top_shooter_motor.getStatorCurrent());
-        SmartDashboard.putNumber("Bottom Shooter Output Current: (amps)", bottom_shooter_motor.getStatorCurrent());
-        SmartDashboard.putNumber("Bottom Shooter Velocity: ", bottom_shooter_motor.getSelectedSensorVelocity());
+        SmartDashboard.putNumber("Top Shooter Output Current: (amps)", top_shooter_motor.getMotorOutputPercent());
+        SmartDashboard.putNumber("Top Shooter Position:", counts_to_revolutions(top_shooter_motor.getSelectedSensorPosition()));
+        SmartDashboard.putNumber("Top Shooter Velocity: ", counts_to_rpm(top_shooter_motor.getSelectedSensorVelocity()));
+        SmartDashboard.putNumber("Top Shooter Error: ", counts_to_rpm(top_shooter_motor.getClosedLoopError()));
+        SmartDashboard.putNumber("Bottom Shooter Output Current: (amps)", bottom_shooter_motor.getMotorOutputPercent());
+        SmartDashboard.putNumber("Bottom Shooter Position:", counts_to_revolutions(bottom_shooter_motor.getSelectedSensorPosition()));
+        SmartDashboard.putNumber("Bottom Shooter Velocity: ", counts_to_rpm(bottom_shooter_motor.getSelectedSensorVelocity()));
+        SmartDashboard.putNumber("Bottom Shooter Error: ", counts_to_rpm(bottom_shooter_motor.getClosedLoopError()));
+        reset_encoders_method();
+    }
+
+    private void reset_encoders_method() {
+        boolean reset_encoders = SmartDashboard.getBoolean("Reset Encoders", false);
+        if (reset_encoders) {
+            top_shooter_motor.setSelectedSensorPosition(0);
+            bottom_shooter_motor.setSelectedSensorPosition(0);
+            SmartDashboard.putBoolean("Reset Encoders", false);
+        }
     }
 
     public void run_at_rpm(int rpm) {
@@ -52,5 +79,21 @@ public class ShooterSubsystem extends SubsystemBase {
         top_shooter_motor.neutralOutput();
         bottom_shooter_motor.neutralOutput();
 
+    }
+
+    public double rpm_to_count(double rpm) {
+        return (rpm * 2048) / 60;
+    }
+
+    public double revolutions_to_counts(double revolutions) {
+        return revolutions * 2048;
+    }
+
+    private double counts_to_rpm(double counts) {
+        return (counts / 2048) * 60;
+    }
+
+    private double counts_to_revolutions(double counts) {
+        return counts / 2048;
     }
 }
