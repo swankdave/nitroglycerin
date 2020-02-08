@@ -31,7 +31,7 @@ public class ShooterSubsystem extends SubsystemBase {
         top_shooter_motor.setSelectedSensorPosition(0);
         top_shooter_motor.setInverted(true);
         top_shooter_motor.configClosedLoopPeakOutput(0, 0.65);
-        bottom_shooter_motor.configClosedLoopPeakOutput(0, 0.70);
+        bottom_shooter_motor.configClosedLoopPeakOutput(0, 0.80);
         SmartDashboard.putBoolean("Reset Encoders", false);
 
     }
@@ -40,21 +40,23 @@ public class ShooterSubsystem extends SubsystemBase {
 //        double speed = 0.58;
 //        top_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 0.75);
 //        bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 1.0);
-//        basic_shooter_shoot();
+        basic_shooter_shoot();
     }
 
     private void basic_shooter_shoot() {
-        top_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(300));
-        bottom_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(350));
+//        top_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(250));
+//        bottom_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(380));
+        top_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(225));
+        bottom_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(425));
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Top Shooter Output Current: (amps)", top_shooter_motor.getMotorOutputPercent());
+        SmartDashboard.putNumber("Top % Out", top_shooter_motor.getMotorOutputPercent());
         SmartDashboard.putNumber("Top Shooter Position:", counts_to_revolutions(top_shooter_motor.getSelectedSensorPosition()));
         SmartDashboard.putNumber("Top Shooter Velocity: ", counts_to_rpm(top_shooter_motor.getSelectedSensorVelocity()));
         SmartDashboard.putNumber("Top Shooter Error: ", counts_to_rpm(top_shooter_motor.getClosedLoopError()));
-        SmartDashboard.putNumber("Bottom Shooter Output Current: (amps)", bottom_shooter_motor.getMotorOutputPercent());
+        SmartDashboard.putNumber("Bottom % Out", bottom_shooter_motor.getMotorOutputPercent());
         SmartDashboard.putNumber("Bottom Shooter Position:", counts_to_revolutions(bottom_shooter_motor.getSelectedSensorPosition()));
         SmartDashboard.putNumber("Bottom Shooter Velocity: ", counts_to_rpm(bottom_shooter_motor.getSelectedSensorVelocity()));
         SmartDashboard.putNumber("Bottom Shooter Error: ", counts_to_rpm(bottom_shooter_motor.getClosedLoopError()));
