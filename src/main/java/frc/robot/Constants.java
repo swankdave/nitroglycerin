@@ -78,6 +78,7 @@ public final class Constants {
 
     public static final class pre_shooter_stage {
         public static final int BAG_ID = 32;
+        public static final int MAGIC_NUMBER = 4096;
         public static final double P = 0.0;
         public static final double I = 0.0;
         public static final double D = 0.0;
