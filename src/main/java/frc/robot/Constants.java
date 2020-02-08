@@ -62,4 +62,9 @@ public final class Constants {
         public static final double TARGET_HEIGHT_INCHES = 61.0;
         public static final double LIMELIGHT_HEIGHT_INCHES = 36.0;
     }
+
+    public static final class intake {
+        public static final int ROLLER_BAR_ID = 30;
+        public static final double SPEED = 0.4;
+    }
 }
