@@ -83,4 +83,8 @@ public final class Constants {
         public static final double I = 0.0;
         public static final double D = 0.0;
     }
+
+    public static final class intake_lift {
+        public static final int SERVO_PORT = 0;
+    }
 }
