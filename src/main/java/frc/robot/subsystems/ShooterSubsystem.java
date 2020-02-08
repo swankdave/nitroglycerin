@@ -53,11 +53,9 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Top % Out", top_shooter_motor.getMotorOutputPercent());
-        SmartDashboard.putNumber("Top Shooter Position:", counts_to_revolutions(top_shooter_motor.getSelectedSensorPosition()));
         SmartDashboard.putNumber("Top Shooter Velocity: ", counts_to_rpm(top_shooter_motor.getSelectedSensorVelocity()));
         SmartDashboard.putNumber("Top Shooter Error: ", counts_to_rpm(top_shooter_motor.getClosedLoopError()));
         SmartDashboard.putNumber("Bottom % Out", bottom_shooter_motor.getMotorOutputPercent());
-        SmartDashboard.putNumber("Bottom Shooter Position:", counts_to_revolutions(bottom_shooter_motor.getSelectedSensorPosition()));
         SmartDashboard.putNumber("Bottom Shooter Velocity: ", counts_to_rpm(bottom_shooter_motor.getSelectedSensorVelocity()));
         SmartDashboard.putNumber("Bottom Shooter Error: ", counts_to_rpm(bottom_shooter_motor.getClosedLoopError()));
         reset_encoders_method();

@@ -67,4 +67,19 @@ public final class Constants {
         public static final int ROLLER_BAR_ID = 30;
         public static final double SPEED = 0.4;
     }
+
+    public static final class index {
+        public static final int BAG_ID = 31;
+        public static final int MAGIC_NUMBER = 2048;
+        public static final double P = 0.0;
+        public static final double I = 0.0;
+        public static final double D = 0.0;
+    }
+
+    public static final class pre_shooter_stage {
+        public static final int BAG_ID = 32;
+        public static final double P = 0.0;
+        public static final double I = 0.0;
+        public static final double D = 0.0;
+    }
 }
