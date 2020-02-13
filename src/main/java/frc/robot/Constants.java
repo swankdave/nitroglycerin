@@ -33,17 +33,29 @@ public final class Constants {
     public static final class shooter {
         public static final class pid_constants {
             public static final class top_motor {
-                public static final double P = 0.305;
-                public static final double I = 0.00018;
-                public static final double D = 0.001;
+                //1 AL covered stealth
+                public static final double P = 0.17;
+                public static final double I = 0.0;
+                public static final double D = 0.0018;
+                //1 Fairlane
+//                public static final double P = 0.305;
+//                public static final double I = 0.00018;
+//                public static final double D = 0.001;
+                //2 Fairlanes
 //                public static final double P = 0.6;
 //                public static final double I = 0.00016;
 //                public static final double D = 0.0012;
             }
             public static final class bottom_motor {
-                public static final double P = 0.32;
-                public static final double I = 0.00016;
-                public static final double D = 0.001;
+                //1 AL covered stealth
+                public static final double P = 0.20;
+                public static final double I = 0.0;
+                public static final double D = 0.0018;
+                //1 Fairlane
+//                public static final double P = 0.32;
+//                public static final double I = 0.00016;
+//                public static final double D = 0.001;
+                //2 Fairlanes
 //                public static final double P = 0.7;
 //                public static final double I = 0.00013;
 //                public static final double D = 0.0015;
