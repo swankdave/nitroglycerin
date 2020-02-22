@@ -46,10 +46,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double deadband_handler(double speed) {
-    if (abs(speed) > 0.1) {
+    if (abs(speed) > 0.05) {
       return speed;
     } else {
       return 0.0;
     }
+
+//    return speed;
+
   }
 }

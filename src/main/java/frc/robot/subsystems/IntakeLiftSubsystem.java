@@ -9,10 +9,12 @@ public class IntakeLiftSubsystem extends SubsystemBase {
 
     public Servo intake_lift_servo = new Servo(Constants.intake_lift.SERVO_PORT);
 
+    public IntakeLiftSubsystem(){
+    }
+
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Intake Lift Angle", intake_lift_servo.getAngle());
-        SmartDashboard.putNumber("Intake Lift Position", intake_lift_servo.get());
+        SmartDashboard.putNumber("Servo Pos: ", this.intake_lift_servo.get());
     }
 
     public void set_position(double position) {

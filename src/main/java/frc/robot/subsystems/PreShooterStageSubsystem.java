@@ -20,6 +20,7 @@ public class PreShooterStageSubsystem extends SubsystemBase {
         stage_motor.config_kI(0, Constants.pre_shooter_stage.I);
         stage_motor.config_kD(0, Constants.pre_shooter_stage.D);
         stage_motor.configClosedLoopPeakOutput(0, 1);
+        stage_motor.setInverted(true);
     }
 
     @Override

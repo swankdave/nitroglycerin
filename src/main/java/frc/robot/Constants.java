@@ -34,9 +34,9 @@ public final class Constants {
         public static final class pid_constants {
             public static final class top_motor {
                 //1 AL covered stealth
-                public static final double P = 0.17;
-                public static final double I = 0.0;
-                public static final double D = 0.0018;
+//                public static final double P = 0.17;
+//                public static final double I = 0.0;
+//                public static final double D = 0.0018;
                 //1 Fairlane
 //                public static final double P = 0.305;
 //                public static final double I = 0.00018;
@@ -45,12 +45,16 @@ public final class Constants {
 //                public static final double P = 0.6;
 //                public static final double I = 0.00016;
 //                public static final double D = 0.0012;
+                //1 Custom AL wheel
+                public static final double P = 0.3;
+                public static final double I = 0.0;
+                public static final double D = 0.0006;
             }
             public static final class bottom_motor {
                 //1 AL covered stealth
-                public static final double P = 0.20;
-                public static final double I = 0.0;
-                public static final double D = 0.0018;
+//                public static final double P = 0.20;
+//                public static final double I = 0.0;
+//                public static final double D = 0.0018;
                 //1 Fairlane
 //                public static final double P = 0.32;
 //                public static final double I = 0.00016;
@@ -59,6 +63,10 @@ public final class Constants {
 //                public static final double P = 0.7;
 //                public static final double I = 0.00013;
 //                public static final double D = 0.0015;
+                //1 custom AL wheel
+                public static final double P = 0.6;
+                public static final double I = 0.0;
+                public static final double D = 0.00075;
             }
 
         }
@@ -77,7 +85,6 @@ public final class Constants {
 
     public static final class intake {
         public static final int ROLLER_BAR_ID = 30;
-        public static final double SPEED = 0.4;
     }
 
     public static final class index {
@@ -99,4 +106,9 @@ public final class Constants {
     public static final class intake_lift {
         public static final int SERVO_PORT = 0;
     }
+
+    public static final class turret_azimuth {
+        public static final int MOTOR = 50;
+    }
+
 }

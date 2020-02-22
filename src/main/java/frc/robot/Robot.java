@@ -10,7 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -20,8 +20,10 @@ import frc.robot.subsystems.ShooterSubsystem;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
-
+//  private IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+//  private ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+//  private PreShooterStageSubsystem preShooterStageSubsystem = new PreShooterStageSubsystem();
+//  private IndexSubsystem indexSubsystem = new IndexSubsystem();
   private RobotContainer m_robotContainer;
 
   /**
@@ -48,7 +50,31 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+
+
+//    intakeSubsystem.run_intake(.3);
+//    indexSubsystem.run_at_percent(.3);
+
+    /**
+     * Index and pre shooter backwards for a small period of time.
+     *
+     * Spin up shooter.
+     *
+     * Run just pre shooter for small period of time
+     *
+     * Run all.
+     */
+
+//    preShooterStageSubsystem.run_at_percent(-1);
+//    indexSubsystem.run_at_percent(-1);
+
+//    indexSubsystem.run_at_percent(.25);
+//    preShooterStageSubsystem.run_at_percent(0.5);
 //    shooterSubsystem.test_shooter();
+
+
+
+
     CommandScheduler.getInstance().run();
   }
 

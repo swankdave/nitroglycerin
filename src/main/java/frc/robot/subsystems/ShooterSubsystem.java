@@ -29,25 +29,28 @@ public class ShooterSubsystem extends SubsystemBase {
         bottom_shooter_motor.config_kD(0, Constants.shooter.pid_constants.bottom_motor.D);
         bottom_shooter_motor.setSelectedSensorPosition(0);
         top_shooter_motor.setSelectedSensorPosition(0);
-        top_shooter_motor.setInverted(true);
-        top_shooter_motor.configClosedLoopPeakOutput(0, 0.65);
-        bottom_shooter_motor.configClosedLoopPeakOutput(0, 0.80);
+        top_shooter_motor.setInverted(false);
+        bottom_shooter_motor.setInverted(true);
+        top_shooter_motor.configClosedLoopPeakOutput(0, 0.8);
+        bottom_shooter_motor.configClosedLoopPeakOutput(0, 1);
         SmartDashboard.putBoolean("Reset Encoders", false);
 
     }
 
     public void test_shooter() {
-        double speed = 1;
-        top_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 0.8);
-        bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 1.0);
-//        basic_shooter_shoot();
+//        double speed = 1;
+//        top_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 0.8);
+//        bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 1.0);
+        basic_shooter_shoot();
     }
 
     private void basic_shooter_shoot() {
 //        top_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(250));
 //        bottom_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(380));
-        top_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(475));
-        bottom_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(675));
+//        top_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(475));
+//        bottom_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(675));
+        top_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(400));
+        bottom_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(550));
     }
 
     @Override
@@ -70,9 +73,9 @@ public class ShooterSubsystem extends SubsystemBase {
         }
     }
 
-    public void run_at_rpm(int rpm) {
-        top_shooter_motor.set(TalonFXControlMode.Velocity, -rpm);
-        bottom_shooter_motor.set(TalonFXControlMode.Velocity, rpm);
+    public void run_at_rpms(int top_rpm, int bottom_rpm) {
+        top_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(top_rpm));
+        bottom_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(bottom_rpm));
     }
 
     public void shooter_neutral() {
