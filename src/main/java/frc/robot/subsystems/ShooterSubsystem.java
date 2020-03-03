@@ -6,11 +6,16 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.context.ShootingContext;
 
 public class ShooterSubsystem extends SubsystemBase {
 
     private TalonFX top_shooter_motor = new TalonFX(Constants.shooter.TOP_MOTOR_ID);
     private TalonFX bottom_shooter_motor = new TalonFX(Constants.shooter.BOTTOM_MOTOR_ID);
+    private boolean enabled = false;
+    private ShootingContext shootingContext = ShootingContext.getInstance();
+    public double bottom_kP, bottom_kI, bottom_kD, bottom_kIz;
+    public double top_kP, top_kI, top_kD, top_kIz;
 
 
     public ShooterSubsystem() {
@@ -33,15 +38,33 @@ public class ShooterSubsystem extends SubsystemBase {
         bottom_shooter_motor.setInverted(true);
         top_shooter_motor.configClosedLoopPeakOutput(0, 0.8);
         bottom_shooter_motor.configClosedLoopPeakOutput(0, 1);
+        //Open loop ramp rate
+        top_shooter_motor.configOpenloopRamp(0);
+        bottom_shooter_motor.configOpenloopRamp(0);
+
+//        SmartDashboard.putNumber("Bottom Shooter P", 0.0);
+//        SmartDashboard.putNumber("Top Shooter P", 0.0);
+//        SmartDashboard.putNumber("Bottom Shooter I", 0.0);
+//        SmartDashboard.putNumber("Top Shooter I", 0.0);
+//        SmartDashboard.putNumber("Bottom Shooter D", 0.0);
+//        SmartDashboard.putNumber("Top Shooter D", 0.0);
+//        SmartDashboard.getNumber("Top Velocity", 0.0);
+//        SmartDashboard.getNumber("Top Velocity", 0.0);
+
         SmartDashboard.putBoolean("Reset Encoders", false);
 
     }
 
-    public void test_shooter() {
+//    public void test_shooter() {
 //        double speed = 1;
 //        top_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 0.8);
 //        bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 1.0);
-        basic_shooter_shoot();
+////        basic_shooter_shoot();
+//    }
+
+    public void shoot_percent(double speed) {
+        top_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 0.8);
+        bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 1.0);
     }
 
     private void basic_shooter_shoot() {
@@ -55,12 +78,33 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+//        run_from_context();
         SmartDashboard.putNumber("Top % Out", top_shooter_motor.getMotorOutputPercent());
         SmartDashboard.putNumber("Top Shooter Velocity: ", counts_to_rpm(top_shooter_motor.getSelectedSensorVelocity()));
         SmartDashboard.putNumber("Top Shooter Error: ", counts_to_rpm(top_shooter_motor.getClosedLoopError()));
         SmartDashboard.putNumber("Bottom % Out", bottom_shooter_motor.getMotorOutputPercent());
         SmartDashboard.putNumber("Bottom Shooter Velocity: ", counts_to_rpm(bottom_shooter_motor.getSelectedSensorVelocity()));
         SmartDashboard.putNumber("Bottom Shooter Error: ", counts_to_rpm(bottom_shooter_motor.getClosedLoopError()));
+//        double bottom_p = SmartDashboard.getNumber("Bottom Shooter P", 0.0);
+//        double top_p = SmartDashboard.getNumber("Top Shooter P", 0.0);
+//        double bottom_i = SmartDashboard.getNumber("Bottom Shooter I", 0.0);
+//        double top_i = SmartDashboard.getNumber("Top Shooter I", 0.0);
+//        double bottom_d = SmartDashboard.getNumber("Bottom Shooter D", 0.0);
+//        double top_d = SmartDashboard.getNumber("Top Shooter D", 0.0);
+//
+//        if (bottom_d != bottom_kD) {
+//
+//        }
+//
+//        top_shooter_motor.config_kP(0, top_p);
+//        top_shooter_motor.config_kI(0, top_i);
+//        top_shooter_motor.config_kD(0, top_d);
+//
+//        bottom_shooter_motor.config_kP(0, bottom_p);
+//        bottom_shooter_motor.config_kI(0, bottom_i);
+//        bottom_shooter_motor.config_kD(0, bottom_d);
+
+
         reset_encoders_method();
     }
 
@@ -73,7 +117,7 @@ public class ShooterSubsystem extends SubsystemBase {
         }
     }
 
-    public void run_at_rpms(int top_rpm, int bottom_rpm) {
+    public void run_at_rpms(double top_rpm, double bottom_rpm) {
         top_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(top_rpm));
         bottom_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(bottom_rpm));
     }
@@ -82,6 +126,36 @@ public class ShooterSubsystem extends SubsystemBase {
         top_shooter_motor.neutralOutput();
         bottom_shooter_motor.neutralOutput();
 
+    }
+
+    public void test() {
+        double top_velocity = SmartDashboard.getNumber("Top Velocity", 0.0);
+        double bottom_velocity = SmartDashboard.getNumber("Top Velocity", 0.0);
+        run_at_rpms(top_velocity, bottom_velocity);
+    }
+
+    public void rev() {
+        top_shooter_motor.set(TalonFXControlMode.PercentOutput, 0.9 * 0.8);
+        bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, 0.9 * 1.0);
+    }
+
+    public void enable() {
+        enabled = true;
+    }
+
+    public void disable() {
+        enabled = false;
+    }
+
+    public void run_from_context() {
+        if (enabled) {
+            double speed = shootingContext.get_shooter_speed();
+            top_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 0.8);
+            bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 1.0);
+        } else {
+            top_shooter_motor.neutralOutput();
+            bottom_shooter_motor.neutralOutput();
+        }
     }
 
     public double rpm_to_count(double rpm) {

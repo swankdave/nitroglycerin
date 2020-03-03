@@ -29,11 +29,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     left_slave.setIdleMode(IdleMode.kBrake);
     right_master.setIdleMode(IdleMode.kBrake);
     right_slave.setIdleMode(IdleMode.kBrake);
-
-    left_master.setOpenLoopRampRate(1);
-    left_slave.setOpenLoopRampRate(1);
-    right_master.setOpenLoopRampRate(1);
-    right_slave.setOpenLoopRampRate(1);
+    left_master.setOpenLoopRampRate(0.4);
+    left_slave.setOpenLoopRampRate(0.4);
+    right_master.setOpenLoopRampRate(0.4);
+    right_slave.setOpenLoopRampRate(0.4);
 
     left_slave.follow(left_master);
     right_slave.follow(right_master);
@@ -41,12 +40,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void drive(double left_speed, double right_speed) {
-    left_master.set(left_speed);
-    right_master.set(-right_speed);
+    left_master.set(-left_speed);
+    right_master.set(right_speed);
   }
 
   public double deadband_handler(double speed) {
-    if (abs(speed) > 0.05) {
+    if (abs(speed) > 0.1) {
       return speed;
     } else {
       return 0.0;

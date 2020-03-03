@@ -4,13 +4,13 @@ import com.revrobotics.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.context.ShootingContext;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.max;
 
 public class ShooterTiltSubsystem extends SubsystemBase {
 
-    private CANSparkMax tilt_motor = new CANSparkMax(22, CANSparkMax.MotorType.kBrushless);
+    private CANSparkMax tilt_motor = new CANSparkMax(Constants.shooter.TILT_MOTOR_ID, CANSparkMax.MotorType.kBrushless);
     private CANEncoder tilt_encoder = new CANEncoder(tilt_motor, EncoderType.kHallSensor, 42);
     private CANPIDController tilt_pid = tilt_motor.getPIDController();
     private double p = 0.08;
@@ -18,6 +18,8 @@ public class ShooterTiltSubsystem extends SubsystemBase {
     double d = 0.0;
     double min_output = -0.75;
     double max_output = 0.75;
+    private boolean enabled = false;
+    private ShootingContext shootingContext = ShootingContext.getInstance();
 
     public ShooterTiltSubsystem() {
         tilt_motor.restoreFactoryDefaults();
@@ -28,6 +30,7 @@ public class ShooterTiltSubsystem extends SubsystemBase {
         tilt_pid.setI(i);
         tilt_pid.setD(d);
         tilt_pid.setOutputRange(min_output, max_output);
+        SmartDashboard.putBoolean("Reset Azimuth Enc", false);
 
     }
 
@@ -36,23 +39,14 @@ public class ShooterTiltSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Azimuth RPM: ", tilt_encoder.getVelocity());
         SmartDashboard.putNumber("Azimuth Pos: ", tilt_encoder.getPosition());
         SmartDashboard.putNumber("Azimuth % Out: ", tilt_motor.getOutputCurrent());
-        SmartDashboard.putNumber("Azimuth Counts/rev", tilt_encoder.getCountsPerRevolution());
-    }
-
-    public void go_up_slow() {
-        tilt_motor.set(-0.25);
-    }
-
-    public void go_down_slow() {
-        tilt_motor.set(0.25);
-    }
-
-    public void hold() {
-        tilt_motor.set(0);
+        if (SmartDashboard.getBoolean("Reset Azimuth Enc", false)) {
+            tilt_encoder.setPosition(0);
+            SmartDashboard.putBoolean("Reset Azimuth Enc", false);
+        }
     }
 
     public void manual_control(double percent_out) {
-        tilt_motor.set(deadband_handler(0.5 * percent_out));
+        tilt_motor.set(deadband_handler(0.25 * -percent_out));
     }
 
     public double deadband_handler(double speed) {
@@ -62,8 +56,42 @@ public class ShooterTiltSubsystem extends SubsystemBase {
             return 0.0;
         }
 
-//    return speed;
+    }
 
+//    public void close_shooting() {
+//        final double LOW_SETPOINT = -53.61;
+//        pid(LOW_SETPOINT);
+//    }
+//
+//    public void initiation_line_shooting() {
+//        final double INIT_SETPOINT = 0;
+//        pid(INIT_SETPOINT);
+//    }
+//
+//    public void trench_corner_shooting() {
+//        final double TRENCH_CORNER_SETPOINT = 19.113;
+//        pid(TRENCH_CORNER_SETPOINT);
+//    }
+//
+//    public void long_send_shooting() {
+//        final double LONG_SEND_SETPOINT = 0;
+//        pid(LONG_SEND_SETPOINT);
+//    }
+
+    public void run_from_context() {
+        if (enabled) {
+            pid(shootingContext.get_shooter_tilt_pos());
+        } else {
+            tilt_motor.stopMotor();
+        }
+    }
+
+    public void enable() {
+        enabled = true;
+    }
+
+    public void disable() {
+        enabled = false;
     }
 
     public void pid(double rotations) {
