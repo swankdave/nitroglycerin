@@ -14,8 +14,8 @@ public class ShooterSubsystem extends SubsystemBase {
     private TalonFX bottom_shooter_motor = new TalonFX(Constants.shooter.BOTTOM_MOTOR_ID);
     private boolean enabled = false;
     private ShootingContext shootingContext = ShootingContext.getInstance();
-    public double bottom_kP, bottom_kI, bottom_kD, bottom_kIz;
-    public double top_kP, top_kI, top_kD, top_kIz;
+//    public double bottom_kP, bottom_kI, bottom_kD, bottom_kIz;
+//    public double top_kP, top_kI, top_kD, top_kIz;
 
 
     public ShooterSubsystem() {
@@ -62,8 +62,9 @@ public class ShooterSubsystem extends SubsystemBase {
 ////        basic_shooter_shoot();
 //    }
 
-    public void shoot_percent(double speed) {
-        top_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 0.8);
+    public void shoot_percent() {
+        double speed = 1;
+        top_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 0.5);
         bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 1.0);
     }
 
@@ -78,7 +79,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-//        run_from_context();
+        run_from_context();
         SmartDashboard.putNumber("Top % Out", top_shooter_motor.getMotorOutputPercent());
         SmartDashboard.putNumber("Top Shooter Velocity: ", counts_to_rpm(top_shooter_motor.getSelectedSensorVelocity()));
         SmartDashboard.putNumber("Top Shooter Error: ", counts_to_rpm(top_shooter_motor.getClosedLoopError()));
@@ -135,8 +136,8 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void rev() {
-        top_shooter_motor.set(TalonFXControlMode.PercentOutput, 0.9 * 0.8);
-        bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, 0.9 * 1.0);
+        top_shooter_motor.set(TalonFXControlMode.PercentOutput, 1 * 0.8);
+        bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, 1 * 1.0);
     }
 
     public void enable() {
@@ -150,7 +151,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public void run_from_context() {
         if (enabled) {
             double speed = shootingContext.get_shooter_speed();
-            top_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 0.8);
+            top_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 0.5);
             bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 1.0);
         } else {
             top_shooter_motor.neutralOutput();

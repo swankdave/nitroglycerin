@@ -27,28 +27,18 @@ public class TurretRotateSubsystem extends SubsystemBase {
     double max_output = 0.8;
     private boolean moving_to_angle = false;
     private double moving_to_angle_setpoint = 0.0;
-    private double[][][] lookup_table = {
-            {
-                    {
-                            0.0,//Shoot speed for 1 foot top shooter
-                            0.0
-                    },
-                    {
-                            15 //Angle for shooter hood
-                    }
-            },
-            {},
-            {},
-            {},
-    };
-
 
     public TurretRotateSubsystem(LimelightHandler limelight_temp) {
         limelight = limelight_temp;
         turret_azimuth.restoreFactoryDefaults();
         turret_azimuth.setIdleMode(CANSparkMax.IdleMode.kBrake);
         turret_azimuth.setInverted(true);
-        //@ToDo Verify the position conversion factor is return position as applied angles.0.1875 5.295
+        turret_azimuth.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, 190);
+        turret_azimuth.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, true);
+        turret_azimuth.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, -97);
+        turret_azimuth.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
+
+        //@ToDo Verify the position conversion factor is return position as applied angles.
         turret_encoder.setPositionConversionFactor(5.33333333333333333333333333333333333333);
         turret_pid.setFF(0);
         turret_pid.setP(p);

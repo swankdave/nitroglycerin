@@ -79,9 +79,9 @@ public class ShootingContext {
             case TRENCH_BACK:
                 return 1;
             case FULL_COURT:
-                return 0;
-            case NOT_SHOOTING:
                 return 1;
+            case NOT_SHOOTING:
+                return 0;
             default:
                 return 0;
         }

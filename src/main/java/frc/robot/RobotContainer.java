@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.ShootingContextCommand;
 import frc.robot.context.ShootingContext;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.*;
@@ -41,21 +40,34 @@ public class RobotContainer {
   private TurretRotateSubsystem turretRotateSubsystem = new TurretRotateSubsystem(limelight);
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-  private final RunCommand rev_shooter_command = new RunCommand(() -> shooterSubsystem.rev());
+  private final RunCommand rev_shooter_command = new RunCommand(() -> shooterSubsystem.rev(), shooterSubsystem);
+  private final ParallelCommandGroup backwards = new ParallelCommandGroup(
+          new RunCommand(() -> indexSubsystem.run_at_percent(-1), indexSubsystem),
+          new RunCommand(() -> preShooterStageSubsystem.run_at_percent(-1), preShooterStageSubsystem)
+  );
+
+  private final ParallelCommandGroup intake_down_and_run = new ParallelCommandGroup(
+          new RunCommand(() -> intakeLiftSubsystem.down(), intakeLiftSubsystem),
+          new RunCommand(() -> intakeSubsystem.run_intake(Constants.intake.INTAKE_SPEED))
+  );
 
   public Joystick left_joy = new Joystick(joystick.LEFT_JOY_ID);
   public Joystick right_joy = new Joystick(joystick.RIGHT_JOY_ID);
   private Joystick button_monkey = new Joystick(joystick.BUTTON_MONKEY);
 
-  private JoystickButton run_intake = new JoystickButton(right_joy, 1);
+  private JoystickButton run_intake = new JoystickButton(left_joy, 2);
   private JoystickButton lift_intake = new JoystickButton(left_joy, 1);
   private JoystickButton run_shooter = new JoystickButton(button_monkey, 6);
-  private JoystickButton rev_shooter = new JoystickButton(button_monkey, 1);
-  private JoystickButton back_button = new JoystickButton(button_monkey, 4);
-  private JoystickButton cancel_rev = new JoystickButton(button_monkey, 3);
-  private JoystickButton just_intake = new JoystickButton(left_joy, 2);
+  private JoystickButton rev_shooter = new JoystickButton(button_monkey, 7);
+  private JoystickButton just_intake = new JoystickButton(left_joy, 3);
   private JoystickButton shooter_aim = new JoystickButton(button_monkey, 10);
+  private JoystickButton backwards_button = new JoystickButton(button_monkey, 5);
   private JoystickButton test = new JoystickButton(right_joy, 4);
+  private JoystickButton close_shot_button = new JoystickButton(button_monkey, 4);
+  private JoystickButton trench_corner_button = new JoystickButton(button_monkey, 2);
+  private JoystickButton trench_back_button = new JoystickButton(button_monkey, 8);
+  private JoystickButton init_line_button = new JoystickButton(button_monkey, 3);
+  private JoystickButton test_azimuth = new JoystickButton(button_monkey, 1);
 
 
 
@@ -68,14 +80,14 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    shooterSubsystem.setDefaultCommand(new RunCommand(() -> shooterSubsystem.shooter_neutral(), shooterSubsystem));
+    shooterSubsystem.setDefaultCommand(new RunCommand(() -> shooterSubsystem.disable(), shooterSubsystem));
     indexSubsystem.setDefaultCommand(new RunCommand(() -> indexSubsystem.neutral(), indexSubsystem));
     preShooterStageSubsystem.setDefaultCommand(new RunCommand(() -> preShooterStageSubsystem.run_at_percent(0), preShooterStageSubsystem));
     intakeSubsystem.setDefaultCommand(new RunCommand(() -> intakeSubsystem.neutral_intake(), intakeSubsystem));
     intakeLiftSubsystem.setDefaultCommand(new RunCommand(() -> intakeLiftSubsystem.up(), intakeLiftSubsystem));
     shooterTiltSubsystem.setDefaultCommand(new RunCommand(() -> shooterTiltSubsystem.manual_control(button_monkey.getRawAxis(1)), shooterTiltSubsystem));
     turretRotateSubsystem.setDefaultCommand(new RunCommand(() -> turretRotateSubsystem.manual_control(button_monkey.getRawAxis(4)), turretRotateSubsystem));
-    shootingContextWrapperSubsystem.setDefaultCommand(new RunCommand(() -> shootingContextWrapperSubsystem.set_not_shooting()));
+    shootingContextWrapperSubsystem.setDefaultCommand(new RunCommand(() -> shootingContextWrapperSubsystem.set_not_shooting(), shootingContextWrapperSubsystem));
     drivetrain_subsystem.setDefaultCommand(new RunCommand(() -> drivetrain_subsystem.drive(drivetrain_subsystem.deadband_handler(left_joy.getY() * Constants.drivetrain.SPEED_MULTIPLIER), drivetrain_subsystem.deadband_handler(right_joy.getY() * Constants.drivetrain.SPEED_MULTIPLIER)), drivetrain_subsystem));
   }
 
@@ -89,41 +101,30 @@ public class RobotContainer {
     run_intake
             .whenHeld(
                     new ParallelCommandGroup(
-                            new RunCommand(() -> intakeSubsystem.run_intake(Constants.intake.INTAKE_SPEED), intakeSubsystem),
+//                            new RunCommand(() -> intakeSubsystem.run_intake(Constants.intake.INTAKE_SPEED), intakeSubsystem),
                             new RunCommand(() -> indexSubsystem.run_at_percent(0.7), indexSubsystem),
                             new RunCommand(() -> preShooterStageSubsystem.run_at_percent(0), preShooterStageSubsystem)
     ));
     rev_shooter.whenPressed(rev_shooter_command);
-    cancel_rev.cancelWhenPressed(rev_shooter_command);
     run_shooter
             .whileHeld(
                     new ParallelCommandGroup(
                             new RunCommand(() -> indexSubsystem.run_at_percent(0.7), indexSubsystem),
                             new RunCommand(() -> preShooterStageSubsystem.run_at_percent(1), preShooterStageSubsystem),
-                            new RunCommand(() -> shooterSubsystem.shoot_percent(1), shooterSubsystem)
+                            new RunCommand(() -> shooterSubsystem.shoot_percent(), shooterSubsystem)
     ));
 
-    back_button
-            .whenHeld(
-                    new ParallelCommandGroup(
-                          new RunCommand(() -> indexSubsystem.run_at_percent(-1), indexSubsystem),
-                          new RunCommand(() -> preShooterStageSubsystem.run_at_percent(-1), preShooterStageSubsystem)
-    ));
+    backwards_button.whileHeld(backwards);
 
-    just_intake.whenHeld(new RunCommand(() -> intakeSubsystem.run_intake(Constants.intake.INTAKE_SPEED), intakeSubsystem));
+    just_intake.whenHeld(new RunCommand(() -> intakeSubsystem.run_intake(1), intakeSubsystem));
 
-    lift_intake.toggleWhenPressed(new RunCommand(() -> intakeLiftSubsystem.down(), intakeLiftSubsystem));
+    lift_intake.whileHeld(intake_down_and_run);
 
     shooter_aim.toggleWhenPressed(new RunCommand(() -> turretRotateSubsystem.angle_control(limelight.get_horizontal_offset(), limelight.has_target()), turretRotateSubsystem));
 
     test.whileHeld(new RunCommand(() -> shooterSubsystem.test(), shooterSubsystem));
 
-//    init_line_button.toggleWhenPressed(new ShootingContextCommand(shootingContextWrapperSubsystem, shooting_context.INIT_LINE));
-//    trench_corner_button.toggleWhenPressed(new ShootingContextCommand(shootingContextWrapperSubsystem, shooting_context.TRENCH_CORNER));
-//    trench_back_button.toggleWhenPressed(new ShootingContextCommand(shootingContextWrapperSubsystem, shooting_context.TRENCH_BACK));
-//    full_court_button.toggleWhenPressed(new ShootingContextCommand(shootingContextWrapperSubsystem, shooting_context.FULL_COURT));
-//    close_shot_button.toggleWhenPressed(new ShootingContextCommand(shootingContextWrapperSubsystem, shooting_context.CLOSE_SHOT));
-
+    test_azimuth.whileHeld(new RunCommand(() -> shooterTiltSubsystem.initiation_line_shooting(), shooterTiltSubsystem));
 
   }
 

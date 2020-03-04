@@ -13,9 +13,13 @@ public class ShooterTiltSubsystem extends SubsystemBase {
     private CANSparkMax tilt_motor = new CANSparkMax(Constants.shooter.TILT_MOTOR_ID, CANSparkMax.MotorType.kBrushless);
     private CANEncoder tilt_encoder = new CANEncoder(tilt_motor, EncoderType.kHallSensor, 42);
     private CANPIDController tilt_pid = tilt_motor.getPIDController();
-    private double p = 0.08;
-    double i = 0.015;
-    double d = 0.0;
+//    private double p = 0.08;
+//    double i = 0.015;
+//    double d = 0.0;
+    double p = 0.01;
+    double i = 0;
+    double d = 0;
+
     double min_output = -0.75;
     double max_output = 0.75;
     private boolean enabled = false;
@@ -29,6 +33,7 @@ public class ShooterTiltSubsystem extends SubsystemBase {
         tilt_pid.setP(p);
         tilt_pid.setI(i);
         tilt_pid.setD(d);
+        tilt_pid.setIZone(1.5);
         tilt_pid.setOutputRange(min_output, max_output);
         SmartDashboard.putBoolean("Reset Azimuth Enc", false);
 
@@ -58,20 +63,20 @@ public class ShooterTiltSubsystem extends SubsystemBase {
 
     }
 
-//    public void close_shooting() {
-//        final double LOW_SETPOINT = -53.61;
-//        pid(LOW_SETPOINT);
-//    }
-//
-//    public void initiation_line_shooting() {
-//        final double INIT_SETPOINT = 0;
-//        pid(INIT_SETPOINT);
-//    }
-//
-//    public void trench_corner_shooting() {
-//        final double TRENCH_CORNER_SETPOINT = 19.113;
-//        pid(TRENCH_CORNER_SETPOINT);
-//    }
+    public void close_shooting() {
+        final double LOW_SETPOINT = -53.61;
+        pid(LOW_SETPOINT);
+    }
+
+    public void initiation_line_shooting() {
+        final double INIT_SETPOINT = 0;
+        pid(INIT_SETPOINT);
+    }
+
+    public void trench_corner_shooting() {
+        final double TRENCH_CORNER_SETPOINT = 10.313;
+        pid(TRENCH_CORNER_SETPOINT);
+    }
 //
 //    public void long_send_shooting() {
 //        final double LONG_SEND_SETPOINT = 0;

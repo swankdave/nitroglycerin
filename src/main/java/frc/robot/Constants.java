@@ -85,7 +85,7 @@ public final class Constants {
 
     public static final class intake {
         public static final int ROLLER_BAR_ID = 30;
-        public static final double INTAKE_SPEED = 0.4;
+        public static final double INTAKE_SPEED = 0.5;
     }
 
     public static final class index {
