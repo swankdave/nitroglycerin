@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.BasicAuto;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ShooterTiltToAngle;
 import frc.robot.subsystems.*;
@@ -38,7 +39,9 @@ public class RobotContainer {
   private TurretRotateSubsystem turretRotateSubsystem = new TurretRotateSubsystem(limelight);
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+
   private final RunCommand rev_shooter_command = new RunCommand(() -> shooterSubsystem.rev(), shooterSubsystem);
+
   private final ParallelCommandGroup backwards = new ParallelCommandGroup(
           new RunCommand(() -> indexSubsystem.run_at_percent(-1), indexSubsystem),
           new RunCommand(() -> preShooterStageSubsystem.run_at_percent(-1), preShooterStageSubsystem)
@@ -83,7 +86,7 @@ public class RobotContainer {
     intakeLiftSubsystem.setDefaultCommand(new RunCommand(() -> intakeLiftSubsystem.up(), intakeLiftSubsystem));
     shooterTiltSubsystem.setDefaultCommand(new RunCommand(() -> shooterTiltSubsystem.manual_control(button_monkey.getRawAxis(1)), shooterTiltSubsystem));
     turretRotateSubsystem.setDefaultCommand(new RunCommand(() -> turretRotateSubsystem.manual_control(button_monkey.getRawAxis(4)), turretRotateSubsystem));
-    drivetrain_subsystem.setDefaultCommand(new RunCommand(() -> drivetrain_subsystem.drive(drivetrain_subsystem.deadband_handler(left_joy.getY() * Constants.drivetrain.SPEED_MULTIPLIER), drivetrain_subsystem.deadband_handler(right_joy.getY() * Constants.drivetrain.SPEED_MULTIPLIER)), drivetrain_subsystem));
+    drivetrain_subsystem.setDefaultCommand(new RunCommand(() -> drivetrain_subsystem.drive(drivetrain_subsystem.deadband_handler(drivetrain_subsystem.square_joysticks(left_joy.getY() * Constants.drivetrain.SPEED_MULTIPLIER)), drivetrain_subsystem.deadband_handler(drivetrain_subsystem.square_joysticks(right_joy.getY() * Constants.drivetrain.SPEED_MULTIPLIER))), drivetrain_subsystem));
   }
 
   /**
@@ -138,6 +141,11 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return new BasicAuto(
+            turretRotateSubsystem,
+            shooterSubsystem,
+            drivetrain_subsystem,
+            indexSubsystem,
+            preShooterStageSubsystem);
   }
 }

@@ -20,10 +20,6 @@ import frc.robot.subsystems.*;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-//  private IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-//  private ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
-//  private PreShooterStageSubsystem preShooterStageSubsystem = new PreShooterStageSubsystem();
-//  private IndexSubsystem indexSubsystem = new IndexSubsystem();
   private RobotContainer m_robotContainer;
 
   /**
