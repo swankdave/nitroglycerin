@@ -37,6 +37,7 @@ public class RobotContainer {
   private IntakeLiftSubsystem intakeLiftSubsystem = new IntakeLiftSubsystem();
   private ShooterTiltSubsystem shooterTiltSubsystem = new ShooterTiltSubsystem();
   private TurretRotateSubsystem turretRotateSubsystem = new TurretRotateSubsystem(limelight);
+  private WinchSubsystem winchSubsystem = new WinchSubsystem();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -67,6 +68,10 @@ public class RobotContainer {
   private JoystickButton trench_corner_button = new JoystickButton(button_monkey, 2);
   private JoystickButton init_line_button = new JoystickButton(button_monkey, 3);
   private JoystickButton trench_back_button = new JoystickButton(button_monkey, 1);
+  private JoystickButton winch_extend = new JoystickButton(right_joy, 3);
+  private JoystickButton winch_fast_retract = new JoystickButton(right_joy, 4);
+  private JoystickButton winch_slow_retract = new JoystickButton(right_joy, 6);
+
 
 
 
@@ -86,6 +91,7 @@ public class RobotContainer {
     intakeLiftSubsystem.setDefaultCommand(new RunCommand(() -> intakeLiftSubsystem.up(), intakeLiftSubsystem));
     shooterTiltSubsystem.setDefaultCommand(new RunCommand(() -> shooterTiltSubsystem.manual_control(button_monkey.getRawAxis(1)), shooterTiltSubsystem));
     turretRotateSubsystem.setDefaultCommand(new RunCommand(() -> turretRotateSubsystem.manual_control(button_monkey.getRawAxis(4)), turretRotateSubsystem));
+    winchSubsystem.setDefaultCommand(new RunCommand(() -> winchSubsystem.neutral_output(), winchSubsystem));
     drivetrain_subsystem.setDefaultCommand(new RunCommand(() -> drivetrain_subsystem.drive(drivetrain_subsystem.deadband_handler(drivetrain_subsystem.square_joysticks(left_joy.getY() * Constants.drivetrain.SPEED_MULTIPLIER)), drivetrain_subsystem.deadband_handler(drivetrain_subsystem.square_joysticks(right_joy.getY() * Constants.drivetrain.SPEED_MULTIPLIER))), drivetrain_subsystem));
   }
 
@@ -123,11 +129,17 @@ public class RobotContainer {
 
     close_shot_button.whenPressed(new ShooterTiltToAngle(shooterTiltSubsystem, -53.61));
 
-    init_line_button.whenPressed(new ShooterTiltToAngle(shooterTiltSubsystem, 0));
+    init_line_button.whenPressed(new ShooterTiltToAngle(shooterTiltSubsystem, -2));
 
-    trench_corner_button.whenPressed(new ShooterTiltToAngle(shooterTiltSubsystem, 10.35));
+    trench_corner_button.whenPressed(new ShooterTiltToAngle(shooterTiltSubsystem, 12.35));
 
     trench_back_button.whenPressed(new ShooterTiltToAngle(shooterTiltSubsystem, 17));
+
+    winch_extend.whenHeld(new RunCommand(() -> winchSubsystem.extend(), winchSubsystem));
+
+    winch_fast_retract.whenHeld(new RunCommand(() -> winchSubsystem.retract_powerful(), winchSubsystem));
+
+    winch_slow_retract.whenHeld(new RunCommand(() -> winchSubsystem.retract_slow(), winchSubsystem));
 
   }
 
@@ -146,6 +158,7 @@ public class RobotContainer {
             shooterSubsystem,
             drivetrain_subsystem,
             indexSubsystem,
-            preShooterStageSubsystem);
+            preShooterStageSubsystem,
+            shooterTiltSubsystem);
   }
 }

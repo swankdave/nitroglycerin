@@ -17,9 +17,9 @@ public class TurretRotateSubsystem extends SubsystemBase {
 //    double i = 0.0;
 //    double d = 0.001;
 
-    private double p = 0.009;
-    double i = 0.00000;
-    double d = 0.003;
+    private double p = 0.018;
+    double i = 0.00003;
+    double d = 0.005;
 
     private LimelightHandler limelight;
 
@@ -44,6 +44,7 @@ public class TurretRotateSubsystem extends SubsystemBase {
         turret_pid.setP(p);
         turret_pid.setI(i);
         turret_pid.setD(d);
+        turret_pid.setIZone(0.7);
         turret_pid.setOutputRange(min_output, max_output);
         SmartDashboard.putBoolean("Reset Turret Pos", false);
         SmartDashboard.putBoolean("Is Auto Aiming", false);

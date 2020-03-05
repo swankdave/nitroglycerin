@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -44,8 +45,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
     right_master.set(right_speed);
   }
 
+  @Override
+  public void periodic() {
+    SmartDashboard.putData(this);
+  }
+
   public double deadband_handler(double speed) {
-    if (abs(speed) > 0.1) {
+    if (abs(speed) > 0.05) {
       return speed;
     } else {
       return 0.0;

@@ -15,30 +15,38 @@ public class BasicAuto extends SequentialCommandGroup {
             ShooterSubsystem shooterSubsystem,
             DrivetrainSubsystem drivetrainSubsystem,
             IndexSubsystem indexSubsystem,
-            PreShooterStageSubsystem preShooterStageSubsystem
+            PreShooterStageSubsystem preShooterStageSubsystem,
+            ShooterTiltSubsystem shooterTiltSubsystem
     ) {
         addCommands(
+
+                deadline(
+                        new WaitCommand(.3),
+                        new RunCommand(() -> turretRotateSubsystem.pid_control(90))
+                ),
 
                 //Rev the shooter and aim for 2.5 seconds
                 deadline(
                         new WaitCommand(2.5),
                         new RunCommand(shooterSubsystem::rev, shooterSubsystem),
+                        new ShooterTiltToAngle(shooterTiltSubsystem, -2),
                         new RunCommand(() -> turretRotateSubsystem.angle_control(limelight.get_horizontal_offset(), limelight.has_target()), turretRotateSubsystem)
                 ),
 
                 // Shoot for 5 seconds
                 deadline(
-                        new WaitCommand(5),
+                        new WaitCommand(2),
                         new RunCommand(() -> indexSubsystem.run_at_percent(0.7), indexSubsystem),
                         new RunCommand(() -> preShooterStageSubsystem.run_at_percent(1), preShooterStageSubsystem),
                         new RunCommand(shooterSubsystem::shoot_percent, shooterSubsystem),
+                        new ShooterTiltToAngle(shooterTiltSubsystem, -2),
                         new RunCommand(() -> turretRotateSubsystem.angle_control(limelight.get_horizontal_offset(), limelight.has_target()), turretRotateSubsystem)
                 ),
 
                 // Drive backward(?) for 3 seconds at 40% speed
                 deadline(
-                        new WaitCommand(3),
-                        new RunCommand(() -> drivetrainSubsystem.drive(0.4, 0.4))
+                        new WaitCommand(1),
+                        new RunCommand(() -> drivetrainSubsystem.drive(-0.4, -0.4), drivetrainSubsystem)
                 )
         );
 
