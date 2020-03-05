@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.context.ShootingContext;
+import frc.robot.commands.ShooterTiltToAngle;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.joystick;
@@ -60,12 +60,10 @@ public class RobotContainer {
   private JoystickButton just_intake = new JoystickButton(left_joy, 3);
   private JoystickButton shooter_aim = new JoystickButton(button_monkey, 10);
   private JoystickButton backwards_button = new JoystickButton(button_monkey, 5);
-  private JoystickButton test = new JoystickButton(right_joy, 4);
   private JoystickButton close_shot_button = new JoystickButton(button_monkey, 4);
   private JoystickButton trench_corner_button = new JoystickButton(button_monkey, 2);
-  private JoystickButton trench_back_button = new JoystickButton(button_monkey, 8);
   private JoystickButton init_line_button = new JoystickButton(button_monkey, 3);
-  private JoystickButton test_azimuth = new JoystickButton(button_monkey, 1);
+  private JoystickButton trench_back_button = new JoystickButton(button_monkey, 1);
 
 
 
@@ -120,9 +118,13 @@ public class RobotContainer {
 
     shooter_aim.toggleWhenPressed(new RunCommand(() -> turretRotateSubsystem.angle_control(limelight.get_horizontal_offset(), limelight.has_target()), turretRotateSubsystem));
 
-    test.whileHeld(new RunCommand(() -> shooterSubsystem.test(), shooterSubsystem));
+    close_shot_button.whenPressed(new ShooterTiltToAngle(shooterTiltSubsystem, -53.61));
 
-    test_azimuth.whileHeld(new RunCommand(() -> shooterTiltSubsystem.initiation_line_shooting(), shooterTiltSubsystem));
+    init_line_button.whenPressed(new ShooterTiltToAngle(shooterTiltSubsystem, 0));
+
+    trench_corner_button.whenPressed(new ShooterTiltToAngle(shooterTiltSubsystem, 10.35));
+
+    trench_back_button.whenPressed(new ShooterTiltToAngle(shooterTiltSubsystem, 17));
 
   }
 

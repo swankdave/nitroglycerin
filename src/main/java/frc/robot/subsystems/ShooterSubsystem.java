@@ -79,7 +79,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-//        run_from_context();
         SmartDashboard.putNumber("Top % Out", top_shooter_motor.getMotorOutputPercent());
         SmartDashboard.putNumber("Top Shooter Velocity: ", counts_to_rpm(top_shooter_motor.getSelectedSensorVelocity()));
         SmartDashboard.putNumber("Top Shooter Error: ", counts_to_rpm(top_shooter_motor.getClosedLoopError()));
@@ -129,35 +128,16 @@ public class ShooterSubsystem extends SubsystemBase {
 
     }
 
-    public void test() {
-        double top_velocity = SmartDashboard.getNumber("Top Velocity", 0.0);
-        double bottom_velocity = SmartDashboard.getNumber("Top Velocity", 0.0);
-        run_at_rpms(top_velocity, bottom_velocity);
-    }
+//    public void test() {
+//        double top_velocity = SmartDashboard.getNumber("Top Velocity", 0.0);
+//        double bottom_velocity = SmartDashboard.getNumber("Top Velocity", 0.0);
+//        run_at_rpms(top_velocity, bottom_velocity);
+//    }
 
     public void rev() {
         top_shooter_motor.set(TalonFXControlMode.PercentOutput, 1 * 0.8);
         bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, 1 * 1.0);
     }
-
-//    public void enable() {
-//        enabled = true;
-//    }
-//
-//    public void disable() {
-//        enabled = false;
-//    }
-//
-//    public void run_from_context() {
-//        if (enabled) {
-//            double speed = shootingContext.get_shooter_speed();
-//            top_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 0.5);
-//            bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 1.0);
-//        } else {
-//            top_shooter_motor.neutralOutput();
-//            bottom_shooter_motor.neutralOutput();
-//        }
-//    }
 
     public double rpm_to_count(double rpm) {
         return (rpm * 2048) / 60;

@@ -55,7 +55,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double square_joysticks(double value) {
-
     return Math.copySign(value * value, value);
   }
 

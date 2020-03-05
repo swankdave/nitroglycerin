@@ -86,4 +86,8 @@ public class ShooterTiltSubsystem extends SubsystemBase {
         tilt_pid.setReference(rotations, ControlType.kPosition);
     }
 
+    public void neutral_output() {
+        tilt_motor.stopMotor();
+    }
+
 }

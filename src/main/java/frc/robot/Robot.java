@@ -51,30 +51,6 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
 
-
-//    intakeSubsystem.run_intake(.3);
-//    indexSubsystem.run_at_percent(.3);
-
-    /**
-     * Index and pre shooter backwards for a small period of time.
-     *
-     * Spin up shooter.
-     *
-     * Run just pre shooter for small period of time
-     *
-     * Run all.
-     */
-
-//    preShooterStageSubsystem.run_at_percent(-1);
-//    indexSubsystem.run_at_percent(-1);
-
-//    indexSubsystem.run_at_percent(.25);
-//    preShooterStageSubsystem.run_at_percent(0.5);
-//    shooterSubsystem.test_shooter();
-
-
-
-
     CommandScheduler.getInstance().run();
   }
 
