@@ -50,8 +50,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
     } else {
       return 0.0;
     }
-
 //    return speed;
 
   }
+
+  public double square_joysticks(double value) {
+
+    return Math.copySign(value * value, value);
+  }
+
 }

@@ -26,8 +26,6 @@ import frc.robot.util.LimelightHandler;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private ShootingContext shooting_context = ShootingContext.getInstance();
-  private ShootingContextWrapperSubsystem shootingContextWrapperSubsystem = new ShootingContextWrapperSubsystem();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DrivetrainSubsystem drivetrain_subsystem = new DrivetrainSubsystem();
   private LimelightHandler limelight = LimelightHandler.getInstance();
@@ -80,14 +78,13 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    shooterSubsystem.setDefaultCommand(new RunCommand(() -> shooterSubsystem.disable(), shooterSubsystem));
+    shooterSubsystem.setDefaultCommand(new RunCommand(() -> shooterSubsystem.shooter_neutral(), shooterSubsystem));
     indexSubsystem.setDefaultCommand(new RunCommand(() -> indexSubsystem.neutral(), indexSubsystem));
     preShooterStageSubsystem.setDefaultCommand(new RunCommand(() -> preShooterStageSubsystem.run_at_percent(0), preShooterStageSubsystem));
     intakeSubsystem.setDefaultCommand(new RunCommand(() -> intakeSubsystem.neutral_intake(), intakeSubsystem));
     intakeLiftSubsystem.setDefaultCommand(new RunCommand(() -> intakeLiftSubsystem.up(), intakeLiftSubsystem));
     shooterTiltSubsystem.setDefaultCommand(new RunCommand(() -> shooterTiltSubsystem.manual_control(button_monkey.getRawAxis(1)), shooterTiltSubsystem));
     turretRotateSubsystem.setDefaultCommand(new RunCommand(() -> turretRotateSubsystem.manual_control(button_monkey.getRawAxis(4)), turretRotateSubsystem));
-    shootingContextWrapperSubsystem.setDefaultCommand(new RunCommand(() -> shootingContextWrapperSubsystem.set_not_shooting(), shootingContextWrapperSubsystem));
     drivetrain_subsystem.setDefaultCommand(new RunCommand(() -> drivetrain_subsystem.drive(drivetrain_subsystem.deadband_handler(left_joy.getY() * Constants.drivetrain.SPEED_MULTIPLIER), drivetrain_subsystem.deadband_handler(right_joy.getY() * Constants.drivetrain.SPEED_MULTIPLIER)), drivetrain_subsystem));
   }
 
@@ -101,11 +98,12 @@ public class RobotContainer {
     run_intake
             .whenHeld(
                     new ParallelCommandGroup(
-//                            new RunCommand(() -> intakeSubsystem.run_intake(Constants.intake.INTAKE_SPEED), intakeSubsystem),
                             new RunCommand(() -> indexSubsystem.run_at_percent(0.7), indexSubsystem),
                             new RunCommand(() -> preShooterStageSubsystem.run_at_percent(0), preShooterStageSubsystem)
     ));
+
     rev_shooter.whenPressed(rev_shooter_command);
+
     run_shooter
             .whileHeld(
                     new ParallelCommandGroup(

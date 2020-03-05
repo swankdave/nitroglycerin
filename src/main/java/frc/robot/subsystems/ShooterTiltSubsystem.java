@@ -16,8 +16,8 @@ public class ShooterTiltSubsystem extends SubsystemBase {
 //    private double p = 0.08;
 //    double i = 0.015;
 //    double d = 0.0;
-    double p = 0.01;
-    double i = 0;
+    double p = 0.04;
+    double i = 0.015;
     double d = 0;
 
     double min_output = -0.75;
@@ -36,7 +36,6 @@ public class ShooterTiltSubsystem extends SubsystemBase {
         tilt_pid.setIZone(1.5);
         tilt_pid.setOutputRange(min_output, max_output);
         SmartDashboard.putBoolean("Reset Azimuth Enc", false);
-
     }
 
     @Override
@@ -82,22 +81,6 @@ public class ShooterTiltSubsystem extends SubsystemBase {
 //        final double LONG_SEND_SETPOINT = 0;
 //        pid(LONG_SEND_SETPOINT);
 //    }
-
-    public void run_from_context() {
-        if (enabled) {
-            pid(shootingContext.get_shooter_tilt_pos());
-        } else {
-            tilt_motor.stopMotor();
-        }
-    }
-
-    public void enable() {
-        enabled = true;
-    }
-
-    public void disable() {
-        enabled = false;
-    }
 
     public void pid(double rotations) {
         tilt_pid.setReference(rotations, ControlType.kPosition);
