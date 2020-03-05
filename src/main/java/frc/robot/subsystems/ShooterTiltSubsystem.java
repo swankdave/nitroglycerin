@@ -66,7 +66,7 @@ public class ShooterTiltSubsystem extends SubsystemBase {
     }
 
     public void initiation_line_shooting() {
-        final double INIT_SETPOINT = 0;
+        final double INIT_SETPOINT = -2;
         pid(INIT_SETPOINT);
     }
 

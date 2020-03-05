@@ -111,7 +111,7 @@ public class TurretRotateSubsystem extends SubsystemBase {
                 }
             }
         } else {
-            manual_control(0);
+            turret_azimuth.stopMotor();
         }
     }
 

@@ -71,6 +71,7 @@ public class RobotContainer {
   private JoystickButton winch_extend = new JoystickButton(right_joy, 3);
   private JoystickButton winch_fast_retract = new JoystickButton(right_joy, 4);
   private JoystickButton winch_slow_retract = new JoystickButton(right_joy, 6);
+  private JoystickButton full_speed = new JoystickButton(right_joy, 1);
 
 
 
@@ -92,7 +93,7 @@ public class RobotContainer {
     shooterTiltSubsystem.setDefaultCommand(new RunCommand(() -> shooterTiltSubsystem.manual_control(button_monkey.getRawAxis(1)), shooterTiltSubsystem));
     turretRotateSubsystem.setDefaultCommand(new RunCommand(() -> turretRotateSubsystem.manual_control(button_monkey.getRawAxis(4)), turretRotateSubsystem));
     winchSubsystem.setDefaultCommand(new RunCommand(() -> winchSubsystem.neutral_output(), winchSubsystem));
-    drivetrain_subsystem.setDefaultCommand(new RunCommand(() -> drivetrain_subsystem.drive(drivetrain_subsystem.deadband_handler(drivetrain_subsystem.square_joysticks(left_joy.getY() * Constants.drivetrain.SPEED_MULTIPLIER)), drivetrain_subsystem.deadband_handler(drivetrain_subsystem.square_joysticks(right_joy.getY() * Constants.drivetrain.SPEED_MULTIPLIER))), drivetrain_subsystem));
+    drivetrain_subsystem.setDefaultCommand(new RunCommand(() -> drivetrain_subsystem.drive(drivetrain_subsystem.deadband_handler(drivetrain_subsystem.square_joysticks(left_joy.getY() * 0.75)), drivetrain_subsystem.deadband_handler(drivetrain_subsystem.square_joysticks(right_joy.getY() * 0.75))), drivetrain_subsystem));
   }
 
   /**
@@ -133,13 +134,16 @@ public class RobotContainer {
 
     trench_corner_button.whenPressed(new ShooterTiltToAngle(shooterTiltSubsystem, 12.35));
 
-    trench_back_button.whenPressed(new ShooterTiltToAngle(shooterTiltSubsystem, 17));
+    trench_back_button.whenPressed(new ShooterTiltToAngle(shooterTiltSubsystem, 12));
 
     winch_extend.whenHeld(new RunCommand(() -> winchSubsystem.extend(), winchSubsystem));
 
     winch_fast_retract.whenHeld(new RunCommand(() -> winchSubsystem.retract_powerful(), winchSubsystem));
 
     winch_slow_retract.whenHeld(new RunCommand(() -> winchSubsystem.retract_slow(), winchSubsystem));
+
+    full_speed.whileHeld(new RunCommand(() -> drivetrain_subsystem.drive(drivetrain_subsystem.deadband_handler(drivetrain_subsystem.square_joysticks(left_joy.getY() * 1)), drivetrain_subsystem.deadband_handler(drivetrain_subsystem.square_joysticks(right_joy.getY() * 1))), drivetrain_subsystem));
+
 
   }
 
