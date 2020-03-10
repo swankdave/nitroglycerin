@@ -10,10 +10,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.BasicAuto;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.ShooterTiltToAngle;
+import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.joystick;
@@ -38,6 +37,7 @@ public class RobotContainer {
   private ShooterTiltSubsystem shooterTiltSubsystem = new ShooterTiltSubsystem();
   private TurretRotateSubsystem turretRotateSubsystem = new TurretRotateSubsystem(limelight);
   private WinchSubsystem winchSubsystem = new WinchSubsystem();
+  private ArmsReleaserSubsytem armsReleaserSubsytem = new ArmsReleaserSubsytem();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -72,6 +72,10 @@ public class RobotContainer {
   private JoystickButton winch_fast_retract = new JoystickButton(right_joy, 4);
   private JoystickButton winch_slow_retract = new JoystickButton(right_joy, 6);
   private JoystickButton full_speed = new JoystickButton(right_joy, 1);
+  private JoystickButton intake_backwards = new JoystickButton(left_joy, 4);
+  private JoystickButton punt_shooter = new JoystickButton(right_joy, 5);
+  private JoystickButton servo_open = new JoystickButton(right_joy, 11);
+
 
 
 
@@ -93,7 +97,10 @@ public class RobotContainer {
     shooterTiltSubsystem.setDefaultCommand(new RunCommand(() -> shooterTiltSubsystem.manual_control(button_monkey.getRawAxis(1)), shooterTiltSubsystem));
     turretRotateSubsystem.setDefaultCommand(new RunCommand(() -> turretRotateSubsystem.manual_control(button_monkey.getRawAxis(4)), turretRotateSubsystem));
     winchSubsystem.setDefaultCommand(new RunCommand(() -> winchSubsystem.neutral_output(), winchSubsystem));
+    armsReleaserSubsytem.setDefaultCommand(new RunCommand(() -> armsReleaserSubsytem.set_position(0.1), armsReleaserSubsytem));
     drivetrain_subsystem.setDefaultCommand(new RunCommand(() -> drivetrain_subsystem.drive(drivetrain_subsystem.deadband_handler(drivetrain_subsystem.square_joysticks(left_joy.getY() * 0.75)), drivetrain_subsystem.deadband_handler(drivetrain_subsystem.square_joysticks(right_joy.getY() * 0.75))), drivetrain_subsystem));
+    SmartDashboard.putBoolean("Score In Auto", true);
+//    limelight.setLedsOff();
   }
 
   /**
@@ -126,7 +133,11 @@ public class RobotContainer {
 
     lift_intake.whileHeld(intake_down_and_run);
 
-    shooter_aim.toggleWhenPressed(new RunCommand(() -> turretRotateSubsystem.angle_control(limelight.get_horizontal_offset(), limelight.has_target()), turretRotateSubsystem));
+//    shooter_aim.toggleWhenPressed(new RunCommand(() -> turretRotateSubsystem.angle_control(limelight.get_horizontal_offset(), limelight.has_target()), turretRotateSubsystem));
+    shooter_aim.toggleWhenPressed(new TurretRotateToLimelight(
+            turretRotateSubsystem,
+            limelight
+    ));
 
     close_shot_button.whenPressed(new ShooterTiltToAngle(shooterTiltSubsystem, -53.61));
 
@@ -134,16 +145,37 @@ public class RobotContainer {
 
     trench_corner_button.whenPressed(new ShooterTiltToAngle(shooterTiltSubsystem, 12.35));
 
-    trench_back_button.whenPressed(new ShooterTiltToAngle(shooterTiltSubsystem, 12));
+    trench_back_button.whenPressed(new ShooterTiltToAngle(shooterTiltSubsystem, 14.15));
 
-    winch_extend.whenHeld(new RunCommand(() -> winchSubsystem.extend(), winchSubsystem));
+    winch_extend.whenHeld(new ParallelCommandGroup(
+            new RunCommand(() -> winchSubsystem.extend(), winchSubsystem),
+            new RunCommand(() -> armsReleaserSubsytem.set_position(1), armsReleaserSubsytem),
+            new RunCommand(() -> turretRotateSubsystem.pid_control(120), turretRotateSubsystem)
+    ));
 
-    winch_fast_retract.whenHeld(new RunCommand(() -> winchSubsystem.retract_powerful(), winchSubsystem));
+    winch_fast_retract.whenHeld(new ParallelCommandGroup(
+            new RunCommand(() -> winchSubsystem.retract_powerful(), winchSubsystem),
+            new RunCommand(() -> turretRotateSubsystem.pid_control(120), turretRotateSubsystem)
+    ));
 
-    winch_slow_retract.whenHeld(new RunCommand(() -> winchSubsystem.retract_slow(), winchSubsystem));
+    winch_slow_retract.whenHeld(new ParallelCommandGroup(
+            new RunCommand(() -> winchSubsystem.retract_slow(), winchSubsystem),
+            new RunCommand(() -> turretRotateSubsystem.pid_control(120), turretRotateSubsystem)
+    ));
 
     full_speed.whileHeld(new RunCommand(() -> drivetrain_subsystem.drive(drivetrain_subsystem.deadband_handler(drivetrain_subsystem.square_joysticks(left_joy.getY() * 1)), drivetrain_subsystem.deadband_handler(drivetrain_subsystem.square_joysticks(right_joy.getY() * 1))), drivetrain_subsystem));
 
+    intake_backwards.whileHeld(new RunCommand(() -> intakeSubsystem.run_intake(-1), intakeSubsystem));
+
+    punt_shooter.whileHeld(
+            new ParallelCommandGroup(
+                    new RunCommand(() -> shooterSubsystem.baby_shot(), shooterSubsystem),
+                    new RunCommand(() -> indexSubsystem.run_at_percent(0.7), indexSubsystem),
+                    new RunCommand(() -> preShooterStageSubsystem.run_at_percent(1), preShooterStageSubsystem)
+            )
+    );
+
+    servo_open.whileHeld(new RunCommand(() -> armsReleaserSubsytem.set_position(1), armsReleaserSubsytem));
 
   }
 
@@ -157,12 +189,27 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return new BasicAuto(
-            turretRotateSubsystem,
-            shooterSubsystem,
-            drivetrain_subsystem,
-            indexSubsystem,
-            preShooterStageSubsystem,
-            shooterTiltSubsystem);
-  }
+    if (SmartDashboard.getBoolean("Score In Auto", false)) {
+      return new BasicAuto(
+              turretRotateSubsystem,
+              shooterSubsystem,
+              drivetrain_subsystem,
+              indexSubsystem,
+              preShooterStageSubsystem,
+              shooterTiltSubsystem);
+    } else {
+      return new DriveOnlyAuto(
+              drivetrain_subsystem
+      );
+    }
+
+//      return new Enginenerds(
+//               shooterTiltSubsystem,
+//               shooterSubsystem,
+//               drivetrain_subsystem,
+//               indexSubsystem,
+//               preShooterStageSubsystem
+//      );
+    }
+
 }

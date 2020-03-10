@@ -71,6 +71,14 @@ public class LimelightHandler extends SubsystemBase {
         return (Constants.limelight.TARGET_HEIGHT_INCHES - Constants.limelight.LIMELIGHT_HEIGHT_INCHES) / Math.sin(Math.toRadians(Constants.limelight.DEGREES_FROM_HORIZONTAL + get_vertical_offset()));
     }
 
+    public void setLedsOn() {
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(LEDS_ON);
+    }
+
+    public void setLedsOff() {
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(LEDS_OFF);
+    }
+
     @Override
     public void periodic() {
         set_pipeline_from_context();

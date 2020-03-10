@@ -68,6 +68,12 @@ public class ShooterSubsystem extends SubsystemBase {
         bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 1.0);
     }
 
+    public void baby_shot() {
+        double speed = 0.24;
+        top_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 0.5);
+        bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 1.0);
+    }
+
     private void basic_shooter_shoot() {
 //        top_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(250));
 //        bottom_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(380));
@@ -75,6 +81,12 @@ public class ShooterSubsystem extends SubsystemBase {
 //        bottom_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(675));
         top_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(400));
         bottom_shooter_motor.set(TalonFXControlMode.Velocity, rpm_to_count(550));
+    }
+
+    public void baby_shot_rev() {
+        double speed = 0.23;
+        top_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 0.5);
+        bottom_shooter_motor.set(TalonFXControlMode.PercentOutput, speed * 1.0);
     }
 
     @Override

@@ -14,7 +14,7 @@ public class WinchSubsystem extends SubsystemBase {
     }
 
     public void extend() {
-        winch_motor.set(-0.6);
+        winch_motor.set(-0.7);
     }
 
     public void retract_powerful() {
